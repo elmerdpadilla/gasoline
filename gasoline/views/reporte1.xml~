@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<template id="report_closing">
+			<t t-call="report.html_container">
+				<t t-foreach="docs" t-as="o">
+					<t t-call="gasoline.external_layout_gasoline">
+						<div class="page">
+<br/>
+<center>
+<h2>Cierre de Turno</h2>
+</center>
+<table border="0" style="width:50%; font-size:20px">
+	<tbody>
+<tr>
+<td colspan="3">
+<center>
+
+</center>
+</td>
+</tr>
+
+<tr>
+<td>Turno :</td><td><span t-field="o.type"/></td><td></td>
+</tr>
+<tr>
+<td>Colaborador :</td><td><span t-field="o.user_id.name"/></td><td></td>
+</tr>
+<tr>
+<td>Fecha :</td><td><span t-field="o.date"/></td><td></td>
+</tr>
+	</tbody>
+</table>
+
+<br/>
+
+<table summary="Lecturas de los Turnos" style="width:100%; font-size:20px">
+	<caption><h3>Lectura del Turno</h3></caption>
+	<thead>
+	<tr>
+		<th rowspan="2" scope="col">Descripcion</th>
+		<th colspan="4" scope="col"></th>
+	</tr>
+	<tr>
+		<th scope="col">Nombre</th>
+		<th scope="col">Nivel Final</th>
+		<th scope="col">Diferencia Final</th>
+		<th scope="col">Total</th>
+	</tr>
+	</thead>
+	<tbody>
+	<t t-foreach="o.reading_finish" t-as="a">
+    <tr>
+      <th scope="row">	<span t-field="a.description"/></th>
+			<td><span t-field="a.name"/></td>
+			<td><span t-field="a.levelt"/></td>
+			<td><span t-field="a.levelf"/></td>
+			<td><span t-field="a.price_list"/></td>
+    </tr>
+</t>
+    <tr>
+      <th scope="row">	Total</th>
+			<td></td>
+			<td></td>
+			<td></td>
+			<th><span t-field="o.reading"/></th>
+    </tr>
+  </tbody>
+</table>
+<br/>
+<br/>
+<br/>
+<table summary="Lecturas de los Turnos" style="width:100%; font-size:20px">
+  <caption><h3>Metodos de pago</h3></caption>
+  <thead>
+    <tr>
+      <th rowspan="2" scope="col">Diario</th>
+      <th colspan="2" scope="col"></th>
+    </tr>
+    <tr>
+      <th scope="col">Dinero</th>
+    </tr>
+  </thead>
+  <tbody>
+<t t-foreach="o.journal_ids" t-as="a">
+    <tr>
+      <th scope="row">	<span t-field="a.journal_id.name"/></th>
+			<td><span t-field="a.money"/></td>
+    </tr>
+</t>
+    <tr>
+      <th scope="row">	Total</th>
+			<th><span t-field="o.journal"/></th>
+    </tr>
+  </tbody>
+</table>
+
+<h3>Diferencia : <span t-field="o.difference"/></h3>
+
+						</div>
+					</t>
+				</t>
+			</t>
+		</template>
+	</data>
+</openerp>
