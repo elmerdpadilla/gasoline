@@ -9,7 +9,11 @@
 			'views/reporte1.xml' ,
 			'views/layouts.xml' ,
 			'views/gasoline_report1.xml'
-   ],
-	'depends': ['base','sale','hr'],
+	],
+	'update_xml' : [
+			'security/groups.xml',
+			'security/ir.model.access.csv',
+	],
+	'depends': ['base','sale','hr','point_of_sale'],
     	'installable': True,
 }

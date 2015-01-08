@@ -72,6 +72,36 @@ class turn(osv.Model):
 		for turn in self.browse(cr,uid,ids,context=context):
 			self.pool.get('gasoline.user').write(cr,uid,turn.user_id.id,{'status':'active'},context=context)
 		return self.write(cr, uid, ids, {'state':'progress'}, context=context)
+	def action_new(self, cr, uid, ids, context=None):
+		print ids
+		id = ids[0]
+		porder_obj= self.pool.get('pos.order')
+		orderdata={}
+		orderdata['is_gasoline']=True
+		orderdata['turn_id']=id
+		order_id=porder_obj.create(cr,uid,orderdata)
+		print order_id
+		return {
+	    'domain': "[('turn_id','=', " + str(id) + ")]",
+            'type': 'ir.actions.act_window',
+	'name': 'Create turn Invoice',
+             'view_type': 'form',
+             'view_mode': 'tree,form',
+            'res_model': 'pos.order',
+            'target': 'current',
+        }
+	def action_view(self, cr, uid, ids, context=None):
+		print ids
+		id = ids[0]
+		return {
+	    'domain': "[('turn_id','=', " + str(id) + ")]",
+            'type': 'ir.actions.act_window',
+	'name': 'Create turn Invoice',
+             'view_type': 'form',
+             'view_mode': 'tree,form',
+            'res_model': 'pos.order',
+            'target': 'current',
+        }
 	def action_done(self, cr, uid, ids, context=None):
 		return self.write(cr, uid, ids, {'state':'closed'}, context=context)
 	def action_close(self, cr, uid, ids, context=None):
@@ -127,11 +157,38 @@ class turn(osv.Model):
 		for turn in self.browse(cr, uid, ids, context=context):
 			totalmoney=0
 			totalcash=0
-			for journal in turn.journal_ids:
-				totalmoney+=journal.money
+			for order in turn.order_ids:
+				totalmoney+=order.amount_total
 			for line in turn.reading_end:
 				totalcash+= line.price_list
 			result[turn.id] = totalcash-totalmoney
+		return result
+	def _get_inv(self, cr, uid, ids, field, arg, context=None):
+		result = {}
+		for turn in self.browse(cr, uid, ids, context=context):
+			totalmoney=0
+			totalcash=0
+			for order in turn.order_ids:
+				totalmoney+=order.invoice_id.amount_total
+			result[turn.id] = totalmoney
+		return result
+	def _get_paid(self, cr, uid, ids, field, arg, context=None):
+		result = {}
+		for turn in self.browse(cr, uid, ids, context=context):
+			totalmoney=0
+			totalcash=0
+			for journal in turn.journal_ids:
+				totalmoney+=journal.money
+			result[turn.id] = totalmoney
+		return result
+	def _get_sold(self, cr, uid, ids, field, arg, context=None):
+		result = {}
+		for turn in self.browse(cr, uid, ids, context=context):
+			totalmoney=0
+			totalcash=0
+			for line in turn.reading_end:
+				totalcash+= line.price_list
+			result[turn.id] = totalcash
 		return result
 	def _get_reading(self, cr, uid, ids, field, arg, context=None):
 		result = {}
@@ -145,8 +202,8 @@ class turn(osv.Model):
 		result = {}
 		for turn in self.browse(cr, uid, ids, context=context):
 			totalmoney=0
-			for journal in turn.journal_ids:
-				totalmoney+=journal.money
+			for journal in turn.order_ids:
+				totalmoney+=journal.amount_total
 			result[turn.id] =totalmoney
 		return result
 	_columns = {
@@ -161,11 +218,15 @@ class turn(osv.Model):
             'reading_init' :fields.one2many('gasoline.reading','turn_id',string="reading Init"),
 	    'reading_end' :fields.one2many('gasoline.reading','turn_id',string="reading end"),
 	    'reading_finish' :fields.one2many('gasoline.reading','turn_id',string="reading Finish"),
-	    'journal_ids' : fields.one2many('gasoline.journal','turn_id',string="payment methods"),
+	    'journal_ids' : fields.one2many('gasoline.journal','turn_id',string="payment methods",domain=[('money','>',0.0)]),
 	    'note':fields.text(string='Note'),
 	    'difference':fields.function(_get_diff,type='float', string='Difference'),
+	    'invoiced':fields.function(_get_inv,type='float', string='Invoiced'),
+	    'paid':fields.function(_get_paid,type='float', string='Paid'),
+	    'sold':fields.function(_get_sold,type='float', string='Sold'),
 	    'reading':fields.function(_get_reading,type='float', string='Reading'),
 	    'journal':fields.function(_get_journal,type='float', string='Journal'),
+	    'order_ids':fields.one2many('pos.order','turn_id',string="orders"),
 }
 	_order = 'date desc'
 	_defaults = {
@@ -174,6 +235,21 @@ class turn(osv.Model):
 		}
 class product(osv.Model):
 	_name = 'gasoline.product'
+	def action_new(self, cr, uid, ids, context=None):
+		print ids
+		id = ids[0]
+		porder_obj= self.pool.get('gasoline.reading2')
+		orderdata={}
+		orderdata['product_id2']=id
+		#order_id=porder_obj.create(cr,uid,orderdata)
+		return {
+            'type': 'ir.actions.act_window',
+	     'name': 'Create turn Invoice',
+             'view_type': 'form',
+             'view_mode': 'form',
+            'res_model': 'gasoline.reading2',
+            'target': 'current',
+        }
 	def _get_name(self, cr, uid, ids, field, arg, context=None):
 		result = {}
 		for product in self.browse(cr, uid, ids, context=context):
@@ -287,6 +363,7 @@ class gasoline_user(osv.Model):
 		}
 
 class reading2(osv.Model):
+	_order = "date desc"
 	_name = 'gasoline.reading2'
 	def _get_level(self, cr, uid, ids, field, arg, context=None):
 
@@ -302,12 +379,20 @@ class reading2(osv.Model):
 			result[product.id] = product.product_id.name
 		return result
 	def create(self, cr, uid, values, context=None):
+		id=self.pool.get('gasoline.product').browse(cr,uid,values['product_id2'],context=context).product_id.id
+		product_obj=self.pool.get('product.template').browse(cr,uid,id,context=context)
+		print "#"*50
+		print values['product_id2']
+		print id
+		print product_obj.qty_available
+		values['qty_available']=product_obj.qty_available
+		values['qty_virtual']=product_obj.qty_available-values['level']
 		b =super(reading2, self).create(cr, uid, values, context=context)
-		if self.pool.get('gasoline.product').browse(cr,uid,values["product_id2"],context=context).locale <= values["level"]:
+		#if self.pool.get('gasoline.product').browse(cr,uid,values["product_id2"],context=context).locale <= values["level"]:
 		
-			self.pool.get('gasoline.product').write(cr,uid,values["product_id2"],{'reading_id':b,'locale':values["level"]},context=context)
-		else:
-			raise osv.except_osv(_('Error!'), _('the level is less than the above'))
+		self.pool.get('gasoline.product').write(cr,uid,values["product_id2"],{'reading_id':b,'locale':values["level"]},context=context)
+		#else:
+			#raise osv.except_osv(_('Error!'), _('the level is less than the above'))
 		return b
 	def unlink(self, cr, uid, ids, context=None):
        		raise osv.except_osv(_('Unable to Delete!'), _('you cannot delete a reading Created'))
@@ -320,16 +405,33 @@ class reading2(osv.Model):
 		'description':fields.text(string="Description"),
 		'bit' : fields.boolean("bit"),
 		'product_id2':fields.many2one("gasoline.product",string="product"),
+		'qty_available':fields.float(string="Available"),
+		'qty_virtual':fields.float(string="Difference"),
+		 'state' :fields.selection([('draft', 'Draft'),('finish','Finish')], 'state',),
+		
 	}
 	_defaults = {
 	'date' : datetime.now()
 		} 
 class journal(osv.Model):
 	_name = 'gasoline.journal'
+	
+	def _get_money(self,cr,uid,ids,field,arg,context=None):
+		res = {}
+		for journal in self.browse(cr,uid,ids,context=context):
+			total=0
+			for order in journal.turn_id.order_ids:
+				for stament in order.statement_ids:
+					if stament.journal_id.id == journal.journal_id.id:
+						total+=stament.amount		
+			res[journal.id]=total
+		return res
+			
 	_columns = {
 		'journal_id':fields.many2one('account.journal',string="payment method",domain=[('type','in',['cash','bank'])]),
-		'money':fields.float(string='Money'),
+		'money':fields.function(_get_money,type='float', string='Money'),
 		'turn_id':fields.many2one('gasoline.turn',string="Turn"),
+
 	}
 
 class hr_employee(osv.osv):
@@ -337,8 +439,6 @@ class hr_employee(osv.osv):
 	def _get_value(self, cr, uid, ids, field, arg, context=None):
 		result = {}
 		hr_ids = self.pool.get('hr.employee').search(cr,uid,[],context=context)
-		print hr_ids
-		print "#"*50
 		for hr_employee in self.browse(cr, uid, ids, context=context):
 			if len(hr_employee.gasoline_user_ids)>0:
 				result[hr_employee.id] = True
@@ -360,3 +460,14 @@ class product_template(osv.osv):
 	'level': fields.float(string = "level"),
 	'levelt': fields.float(string= "theorical level"),
 }
+
+class pos_order(osv.osv):
+	_inherit = 'pos.order'
+	_columns = {
+        'is_gasoline': fields.boolean('Is Gasoline', help="Check if, this is a product is Gasoline."),
+	'turn_id':fields.many2one('gasoline.turn',string="Turn"),
+}
+class pos_session(osv.osv):
+	_inherit = 'pos.session'
+class pos_order_line(osv.osv):
+	_inherit = 'pos.order.line'

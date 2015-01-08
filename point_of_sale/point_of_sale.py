@@ -905,6 +905,7 @@ class pos_order(osv.osv):
 
         for clone in self.browse(cr, uid, clone_list, context=context):
             for order_line in clone.lines:
+                order_line.id
                 line_obj.write(cr, uid, [order_line.id], {
                     'qty': -order_line.qty
                 }, context=context)

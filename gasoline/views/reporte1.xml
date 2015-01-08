@@ -6,7 +6,7 @@
 				<t t-foreach="docs" t-as="o">
 					<t t-call="gasoline.external_layout_gasoline">
 						<div class="page">
-<br/>
+
 <center>
 <h2>Cierre de Turno</h2>
 </center>
@@ -68,8 +68,7 @@
   </tbody>
 </table>
 <br/>
-<br/>
-<br/>
+
 <table summary="Lecturas de los Turnos" style="width:100%; font-size:20px">
   <caption><h3>Metodos de pago</h3></caption>
   <thead>
@@ -83,18 +82,49 @@
   </thead>
   <tbody>
 <t t-foreach="o.journal_ids" t-as="a">
-    <tr>
-      <td scope="row">	<span t-field="a.journal_id.name"/></td>
+    <tr t-if="a.money &lt;&gt; 0.0">
+      <td scope="row" >	<span t-field="a.journal_id.name"/></td>
 			<td><span t-field="a.money"/></td>
     </tr>
 </t>
+
+
+
     <tr>
       <th scope="row">	Total</th>
-			<th><span t-field="o.journal"/></th>
+			<th><span t-field="o.paid"/></th>
     </tr>
   </tbody>
 </table>
 
+<br/>
+<table summary="Pedidos" style="width:100%; font-size:20px">
+  <caption><h3>Pagos</h3></caption>
+  <thead>
+    <tr>
+      <th  scope="col">Referencia</th>
+      <th scope="col">Factura</th>
+      <th scope="col">Total</th>
+    </tr>
+
+  </thead>
+  <tbody>
+
+<t t-foreach="o.order_ids" t-as="a">
+    <tr>
+      <td scope="row" >	<span t-field="a.name"/></td>
+			<td><span t-field="a.invoice_id"/></td>
+			<td aling="right"><span t-field="a.amount_total"/></td>
+    </tr>
+</t>
+      <th scope="row">	Total</th><th></th>
+			<th><span t-field="o.journal"/></th>
+  </tbody>
+</table>
+<h2>Totales</h2>
+<h3>Vendido : <span t-field="o.sold"/></h3>
+<h3>Facturado : <span t-field="o.invoiced"/></h3>
+<h3>Pagado : <span t-field="o.paid"/></h3>
 <h3>Diferencia : <span t-field="o.difference"/></h3>
 
 						</div>
