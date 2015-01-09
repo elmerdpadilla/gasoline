@@ -5,7 +5,9 @@
 	'category': 'sale',
 	'summary': 'sales, ',
 	'description': """Control de Gasolina""",
-	'data':[	'views/gasoline_view.xml' ,
+	'data':[	
+			'data/report_paperformat.xml',
+			'views/gasoline_view.xml' ,
 			'views/reporte1.xml' ,
 			'views/layouts.xml' ,
 			'views/gasoline_report1.xml'

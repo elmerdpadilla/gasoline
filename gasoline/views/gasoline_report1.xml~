@@ -6,13 +6,12 @@
 	<report
     	id="gasoline_report_closing"
     	model="gasoline.turn"
-    	string="Closing"
+    	string="Report Closing"
    	 report_type="qweb-pdf"
     	name="gasoline.report_closing"
    	 file="gasoline.report_closing"
-        attachment="(object.state in ('finish')) and ('INV'+(object.number or '').replace('/','')+'.pdf')"
+        attachment="(object.state in ('finish'))"
 />
-
 
 
     </data>
