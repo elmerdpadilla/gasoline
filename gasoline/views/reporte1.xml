@@ -48,7 +48,7 @@
 	<tbody style="align='center'">
 	<t t-foreach="o.reading_finish" t-as="a">
     <tr>
-      <td scope="row">	<span t-field="a.description"/></td>
+      <td scope="row">	<span t-field="a.description"/>-<span t-field="a.name"/></td>
 			<td><span t-field="a.levelt"/></td>
 			<td><span t-field="a.levelf"/></td>
 			<td class="text-right"><span t-field="a.price_list"/></td>

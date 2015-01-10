@@ -22,7 +22,7 @@
 </tr>
 
 <tr>
-<td style="width:50%;">Turno :</td><tdstyle="width:50%;"><span t-field="o.type"/></td><td></td>
+<td style="width:50%;">Turno :</td><td style="width:50%;"><span t-field="o.type"/></td><td></td>
 </tr>
 <tr>
 <td>Colaborador :</td><td><span t-field="o.user_id.name"/></td><td></td>
