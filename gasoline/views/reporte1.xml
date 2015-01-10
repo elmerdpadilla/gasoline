@@ -10,21 +10,19 @@
 	<t t-call="gasoline.external_layout_gasoline">
 </t>
 
-<center>
-<h2>Cierre de Turno</h2>
-</center>
+
 <table border="0" style="width:100%; font-size:20px">
 	<tbody>
 <tr>
 <td colspan="3">
 <center>
-
+<h2>Cierre de Turno</h2>
 </center>
 </td>
 </tr>
 
 <tr>
-<td>Turno :</td><td><span t-field="o.type"/></td><td></td>
+<td style="width:50%;">Turno :</td><td style="width:50%;"><span t-field="o.type"/></td><td></td>
 </tr>
 <tr>
 <td>Colaborador :</td><td><span t-field="o.user_id.name"/></td><td></td>

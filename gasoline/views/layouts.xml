@@ -35,19 +35,19 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-xs-8">
+      
                   <p>
-                	<strong>Direccion:</strong>
+                	<strong>Dirección:</strong>
                 	<span t-field="company.street"/>
 			<br/>
 			<strong>RTN:</strong>
                 	<span t-field="company.company_registry"/>
 			<br/>
-			<strong>Telefono:</strong>
+			<strong>Tel:</strong>
                 	<span t-field="company.phone"/>
            	  </p>
 
-            </div>
+           
 	    
 
         </div>

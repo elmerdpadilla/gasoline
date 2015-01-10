@@ -10,21 +10,19 @@
 	<t t-call="gasoline.external_layout_gasoline">
 </t>
 
-<center>
-<h2>Cierre de Turno</h2>
-</center>
+
 <table border="0" style="width:100%; font-size:20px">
 	<tbody>
 <tr>
 <td colspan="3">
 <center>
-
+<h2>Cierre de Turno</h2>
 </center>
 </td>
 </tr>
 
 <tr>
-<td>Turno :</td><td><span t-field="o.type"/></td><td></td>
+<td style="width:50%;">Turno :</td><tdstyle="width:50%;"><span t-field="o.type"/></td><td></td>
 </tr>
 <tr>
 <td>Colaborador :</td><td><span t-field="o.user_id.name"/></td><td></td>
@@ -133,8 +131,8 @@
 <td class="text-right"><span t-field="o.invoiced"/></td>
 </tr>
 <tr>
-<td class="text-right">Pagado :</td>
-<td><span t-field="o.paid"/></td>
+<td >Pagado :</td>
+<td class="text-right"> <span t-field="o.paid"/></td>
 </tr>
 <tr>
 <td>Diferencia :</td>
