@@ -14,12 +14,12 @@
             <field name="arch" type="xml">
                 <form string="Point of Sale Orders">
                     <header>
-                        <button name="%(action_pos_payment)d" string="Payment" class="oe_highlight" type="action" states="draft" context="{'pos_session_id' : session_id}"/>
+                        <button name="%(action_pos_payment)d" string="Payment22" class="oe_highlight" type="action" states="draft" context="{'pos_session_id' : session_id}"/>
                         <button name="action_invoice" string="Invoice" type="object" states="paid" attrs="{'readonly': [('partner_id','=',False)]}"/>
                         <button name="refund" string="Return Products" type="object" 
                             attrs="{'invisible':[('state','=','draft')]}"/>
                         <button name="%(action_report_pos_receipt)d" string="Reprint" type="action" states="paid,done,invoiced"/>
-                        <field name="state" widget="statusbar" statusbar_visible="draft,paid,done" statusbar_colors='{"cancel":"red"}'/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,paid,done" statusbar_colors='{"cancel":"green"}'/>
                     </header>
                     <sheet>
                     <group col="4" colspan="4">
@@ -978,7 +978,7 @@
             <field name="model">pos.order</field>
             <field name="arch" type="xml">
                 <search string="Search Sales Order">
-	            <filter name="amount_total"/>
+	            <field name="amount_total"/>
                     <field name="name"/>
                     <field name="date_order"/>
                     <filter icon="terp-document-new" string="New" domain="[('state','=','draft')]"/>

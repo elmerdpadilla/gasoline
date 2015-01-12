@@ -283,7 +283,7 @@ states="closed" class="oe_highlight" />
 </field>
 </page>
 </notebook>
-<group string="Difference">
+<group string="Totales">
 <field name="sold" attrs="{'invisible' : [('state', 'not in', ['closed','finish'])] }"/>
 <field name="invoiced" attrs="{'invisible' : [('state', 'not in', ['closed','finish'])] }"/>
 <field name="paid" attrs="{'invisible' : [('state', 'not in', ['closed','finish'])] }"/>
@@ -585,12 +585,53 @@ states="closed" class="oe_highlight" />
     <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
     <field name="arch" type="xml">
 <button name="action_invoice" position="replace">
-<button name="action_invoice" string="Invoice" type="object"  attrs="{'readonly': [('partner_id','=',False)]}"/>
+<button name="action_invoice" string="Invoice" type="object"  attrs="{'readonly': [('partner_id','=',False)]}" states="draft"/>
 </button>
 
         <field name="product_id" position="replace">
             <field name="product_id" on_change="onchange_product_id(parent.pricelist_id,product_id,qty,parent.partner_id)" domain="[('is_gasoline','=',True)]" />
         </field>
+
+<field name="session_id" position="replace">
+<field name="session_id" required="1" domain="[('config_id.combustible','=',True),('state','=','opened']" widget="selection"/>
+    </field>
+
+
+    </field>
+</record>
+
+
+
+<record model="ir.ui.view" id="view_pos_account_journal_form1">
+    <field name="name">account.journal.form.inherit1</field>
+    <field name="model">account.journal</field>
+    <field name="inherit_id" ref="account.view_account_journal_form"/>
+    <field name="arch" type="xml">
+<field name="centralisation" position="after">
+<field name="combustible" />
+</field>
+    </field>
+</record>
+
+<record model="ir.ui.view" id="view_pos_make_payment_form1">
+    <field name="name">pos.make.payment.form.inherit1</field>
+    <field name="model">pos.make.payment</field>
+    <field name="inherit_id" ref="point_of_sale.view_pos_payment"/>
+    <field name="arch" type="xml">
+<field name="journal_id" position="replace">
+<field name="journal_id" domain="[('combustible','=',True)]" widget="selection" />
+</field>
+    </field>
+</record>
+
+<record model="ir.ui.view" id="view_pos_config_form1">
+    <field name="name">pos.config.form.inherit1</field>
+    <field name="model">pos.config</field>
+    <field name="inherit_id" ref="point_of_sale.view_pos_config_form"/>
+    <field name="arch" type="xml">
+<field name="iface_big_scrollbars" position="after">
+<field name="combustible" />
+</field>
     </field>
 </record>
 

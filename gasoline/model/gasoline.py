@@ -116,7 +116,7 @@ class turn(osv.Model):
 		return self.write(cr, uid, ids, {'state':'finish'}, context=context)
 	def create(self, cr, uid, values, context=None):
 		reading_obj = self.pool.get('gasoline.reading')
-		journal_ids = self.pool.get('account.journal').search(cr,uid,[('type','in',['cash','bank'])],context=context)
+		journal_ids = self.pool.get('account.journal').search(cr,uid,[('type','in',['cash','bank']),('combustible','=',True)],context=context)
 		journal_obj = self.pool.get('gasoline.journal')	
 		if values:
 			turn_obj = self.pool.get('gasoline.turn')
@@ -428,11 +428,21 @@ class journal(osv.Model):
 		return res
 			
 	_columns = {
-		'journal_id':fields.many2one('account.journal',string="payment method",domain=[('type','in',['cash','bank'])]),
+		'journal_id':fields.many2one('account.journal',string="payment method",domain=[('type','in',['cash','bank']),('combustible','=',True)]),
 		'money':fields.function(_get_money,type='float', string='Money'),
 		'turn_id':fields.many2one('gasoline.turn',string="Turn"),
 
 	}
+
+class account_journal(osv.osv):
+	_inherit = 'account.journal'
+	_columns = {
+		'combustible':fields.boolean(string="is payment of combustible?"),
+	
+	}
+
+class pos_make_payment(osv.osv):
+	_inherit = 'pos.make.payment'
 
 class hr_employee(osv.osv):
 	_inherit = 'hr.employee'
@@ -466,6 +476,11 @@ class pos_order(osv.osv):
 	_columns = {
         'is_gasoline': fields.boolean('Is Gasoline', help="Check if, this is a product is Gasoline."),
 	'turn_id':fields.many2one('gasoline.turn',string="Turn"),
+}
+class pos_config(osv.osv):
+	_inherit = 'pos.config'
+	_columns = {
+        'combustible': fields.boolean('Is TPV for gasoline', help="Check if, this is a product is Gasoline."),
 }
 class pos_session(osv.osv):
 	_inherit = 'pos.session'
