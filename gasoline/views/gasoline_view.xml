@@ -588,8 +588,13 @@ states="closed" class="oe_highlight" />
 <button name="action_invoice" string="Invoice" type="object"  attrs="{'readonly': [('partner_id','=',False)]}" states="draft"/>
 </button>
 
+<field name="lines">
+
+<field name="id"/>
+</field>
+
         <field name="product_id" position="replace">
-            <field name="product_id" on_change="onchange_product_id(parent.pricelist_id,product_id,qty,parent.partner_id)" domain="[('is_gasoline','=',True)]" />
+            <field name="product_id" domain="[('is_gasoline','=',True)]" on_change="onchange_product_id(parent.pricelist_id,product_id,qty,parent.partner_id)" />
         </field>
 
 <field name="session_id" position="replace">

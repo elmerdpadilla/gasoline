@@ -667,6 +667,10 @@ class pos_order(osv.osv):
             for line in order.lines:
                 val1 += line.price_subtotal_incl
                 val2 += line.price_subtotal
+            print "#"*50
+            print val1
+            print cur_obj.round(cr, uid, cur, val1)
+            print order.id            
             res[order.id]['amount_tax'] = cur_obj.round(cr, uid, cur, val1-val2)
             res[order.id]['amount_total'] = cur_obj.round(cr, uid, cur, val1)
         return res
@@ -677,7 +681,7 @@ class pos_order(osv.osv):
         'date_order': fields.datetime('Order Date', readonly=True, select=True),
         'user_id': fields.many2one('res.users', 'Salesman', help="Person who uses the the cash register. It can be a reliever, a student or an interim employee."),
         'amount_tax': fields.function(_amount_all, string='Taxes', digits_compute=dp.get_precision('Account'), multi='all'),
-        'amount_total': fields.function(_amount_all, string='Total', multi='all',store=True),
+        'amount_total': fields.function(_amount_all, string='Total', multi='all'),
         'amount_paid': fields.function(_amount_all, string='Paid', states={'draft': [('readonly', False)]}, readonly=True, digits_compute=dp.get_precision('Account'), multi='all'),
         'amount_return': fields.function(_amount_all, 'Returned', digits_compute=dp.get_precision('Account'), multi='all'),
         'lines': fields.one2many('pos.order.line', 'order_id', 'Order Lines', states={'draft': [('readonly', False)]}, readonly=True, copy=True),
