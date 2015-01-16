@@ -635,52 +635,6 @@
                 </t>
             </t>
 
-
-                    <td>Subtotal:</td>
-                    <td class="pos-right-align">
-                        <t t-esc="widget.format_currency(order.getTotalTaxExcluded())"/>
-                    </td>
-                </tr>
-                <t t-foreach="order.getTaxDetails()" t-as="taxdetail">
-                    <tr>
-                        <td><t t-esc="taxdetail.tax.name" /></td>
-                        <td class="pos-right-align">
-                            <t t-esc="widget.format_currency(taxdetail.amount)" />
-                        </td>
-                    </tr>
-                </t>
-                <tr>
-                    <td>Discount:</td>
-                    <td class="pos-right-align">
-                        <t t-esc="widget.format_currency(order.getDiscountTotal())"/>
-                    </td>
-                </tr>
-                <tr class="emph">
-                    <td>Total:</td>
-                    <td class="pos-right-align">
-                        <t t-esc="widget.format_currency(order.getTotalTaxIncluded())"/>
-                    </td>
-                </tr>
-            </table>
-            <br />
-            <table>
-                <tr t-foreach="paymentlines" t-as="line">
-                    <td>
-                        <t t-esc="line.name"/>
-                    </td>
-                    <td class="pos-right-align">
-                        <t t-esc="widget.format_currency(line.get_amount())"/>
-                    </td>
-                </tr>
-            </table>
-            <br />
-            <table>
-                <tr><td>Change:</td><td class="pos-right-align">
-                    <t t-esc="widget.format_currency(order.getChange())"/>
-                    </td></tr>
-            </table>
-
-
             <!-- Footer -->
             <t t-if='receipt.footer'>
                 <br/>
@@ -987,6 +941,10 @@
 <br/>
             User: <t t-esc="widget.pos.cashier ? widget.pos.cashier.name : widget.pos.user.name"/><br />
             <br />
+	    <t t-if="order.get_client()">
+            Cliente: <t t-esc="order.get_client().name"/><br />
+            <br />
+	    </t>
             <t t-if="widget.pos.config.receipt_header">
                 <div style='text-align:center'>
                     <t t-esc="widget.pos.config.receipt_header" />

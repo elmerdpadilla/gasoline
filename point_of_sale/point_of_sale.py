@@ -667,10 +667,6 @@ class pos_order(osv.osv):
             for line in order.lines:
                 val1 += line.price_subtotal_incl
                 val2 += line.price_subtotal
-            print "#"*50
-            print val1
-            print cur_obj.round(cr, uid, cur, val1)
-            print order.id            
             res[order.id]['amount_tax'] = cur_obj.round(cr, uid, cur, val1-val2)
             res[order.id]['amount_total'] = cur_obj.round(cr, uid, cur, val1)
         return res
@@ -931,7 +927,6 @@ class pos_order(osv.osv):
         return self.write(cr, uid, ids, {'state':'invoiced'}, context=context)
 
     def action_invoice(self, cr, uid, ids, context=None):
-        self.create_picking(cr, uid, ids, context=context)
         inv_ref = self.pool.get('account.invoice')
         inv_line_ref = self.pool.get('account.invoice.line')
         product_obj = self.pool.get('product.product')

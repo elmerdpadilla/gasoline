@@ -207,9 +207,9 @@ class sessionpos(osv.Model):
 							i = len(productos)
 					if flag:
 						if p.product_id.attribute_value_ids.name:
-							nombre = p.product_id.attribute_value_ids.name
+							nombre = " ("+p.product_id.attribute_value_ids.name+")"
 						else :
-							nombre = "solo"
+							nombre = " "
 						productos.append([p.product_id.id,p.qty,p.product_id.name, nombre])
 
 				
@@ -228,9 +228,9 @@ class sessionpos(osv.Model):
 				if len(productos) > 0:
 					for a in productos:
 						peso = 23
-						combo = 11
+						combo = 14
 						fill = len(str(int(productos[0][1])))
-						text= text+ str(str(int(a[1])).zfill(fill)+" ").ljust(6, " ")  +a[2][0:peso]+" ("+a[3][0:combo] +") " + "\n"
+						text= text+ str(str(int(a[1])).zfill(fill)+" ").ljust(6, " ") +a[2][0:peso]+a[3][0:combo]  + "\n"
 				else:
 					text = "En Esta Sesion no hay Productos que mostrar"
 				

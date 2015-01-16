@@ -1,9 +1,9 @@
 from openerp.osv import osv
 class reporte(osv.AbstractModel):
-	_name = 'report.gasoline.report_closing'
+	_name = 'report.mcheck.mcheck_print'
 	def render_html(self, cr, uid, ids, data=None, context=None):
 		report_obj = self.pool['report']
-		report = report_obj._get_report_from_name(cr, uid, 'gasoline.report_closing')
+		report = report_obj._get_report_from_name(cr, uid, 'mcheck.mcheck_print')
 		docargs = {
 			'doc_ids': ids,
 			'doc_model': report.model,

@@ -37,6 +37,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             this.shop = null;
             this.company = null;
             this.user = null;
+	    this.client=null;
             this.users = [];
             this.partners = [];
             this.cashier = null;
@@ -135,7 +136,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             loaded: function(self,users){ self.user = users[0]; },
         },{ 
             model:  'res.company',
-            fields: [ 'currency_id', 'email', 'website', 'company_registry', 'vat', 'name', 'phone', 'partner_id' , 'country_id','company_registry'],
+            fields: [ 'currency_id', 'email', 'website', 'company_registry', 'vat', 'name', 'phone', 'partner_id' , 'country_id','company_registry','street','city','rml_header1'],
             domain: function(self){ return [['id','=',self.user.company_id[0]]]; },
             loaded: function(self,companies){ self.company = companies[0]; },
         },{
@@ -254,7 +255,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             model:  'product.product',
             fields: ['display_name', 'list_price','price','pos_categ_id', 'taxes_id', 'ean13', 'default_code', 
                      'to_weight', 'uom_id', 'uos_id', 'uos_coeff', 'mes_type', 'description_sale', 'description',
-                     'product_tmpl_id'],
+                     'product_tmpl_id','name'],
             domain:  function(self){ return [['sale_ok','=',true],['available_in_pos','=',true]]; },
             context: function(self){ return { pricelist: self.pricelist.id, display_default_code: false }; },
             loaded: function(self, products){
@@ -1121,12 +1122,12 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             this.get('paymentLines').each(function(paymentline){
                 paymentlines.push(paymentline.export_for_printing());
             });
+
             var client  = this.get('client');
             var cashier = this.pos.cashier || this.pos.user;
             var company = this.pos.company;
             var shop    = this.pos.shop;
             var date = new Date();
-
             return {
                 orderlines: orderlines,
                 paymentlines: paymentlines,
@@ -1185,6 +1186,13 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             (this.get('paymentLines')).each(_.bind( function(item) {
                 return paymentLines.push([0, 0, item.export_as_JSON()]);
             }, this));
+	var cliente;
+	if(this.get_client()){
+	cliente=this.get_client().name;
+		}else{
+	cliente= false;
+}
+
             return {
                 name: this.getName(),
                 amount_paid: this.getPaidTotal(),
@@ -1195,6 +1203,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 statement_ids: paymentLines,
                 pos_session_id: this.pos.pos_session.id,
                 partner_id: this.get_client() ? this.get_client().id : false,
+		client: cliente,
                 user_id: this.pos.cashier ? this.pos.cashier.id : this.pos.user.id,
                 uid: this.uid,
                 sequence_number: this.sequence_number,

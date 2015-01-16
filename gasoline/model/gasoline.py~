@@ -47,7 +47,7 @@ class side_product(osv.Model):
 		return result
 	
 	_columns = {
-n	        'name' :fields.function(_get_name,type='char', string='Name'),
+	        'name' :fields.function(_get_name,type='char', string='Name'),
 		'side_id':fields.many2one('gasoline.side',string="side id"),
 		'product_id':fields.many2one('gasoline.product',string="product "),
 		'level': fields.float(string="level"),

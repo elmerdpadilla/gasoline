@@ -941,6 +941,10 @@
 <br/>
             User: <t t-esc="widget.pos.cashier ? widget.pos.cashier.name : widget.pos.user.name"/><br />
             <br />
+	    <t t-if="order.get_client()">
+            Cliente: <t t-esc="order.get_client().name"/><br />
+            <br />
+	    </t>
             <t t-if="widget.pos.config.receipt_header">
                 <div style='text-align:center'>
                     <t t-esc="widget.pos.config.receipt_header" />
