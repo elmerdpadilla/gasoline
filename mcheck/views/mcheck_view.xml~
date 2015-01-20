@@ -21,7 +21,7 @@
 				</field>
 		</record>
 
-    <menuitem action="mcheck_action_form_mcheck" id="mcheck_mcheck" parent="account.menu_finance_bank_and_cash" sequence="20" groups="base.group_no_one"/>
+    <menuitem action="mcheck_action_form_mcheck" id="mcheck_mcheck" parent="account.menu_finance_bank_and_cash" sequence="20" groups="check.group_check_manager"/>
 
 
 
@@ -41,7 +41,7 @@
                     <group col="4" colspan="4"> 
                   	 <field name="journal_id" widget="selection" domain="[('checkmiscelaneous','=',True)]" attrs="{'readonly': [('state','!=','draft')]}" />
 			 <field name="number" readonly="1"/>           
-   			 <field name="date" />
+   			 <field name="date" attrs="{'readonly': [('state','!=','draft')]}"/>
             	     </group>
                     <group col="2" colspan="4">    
 <field name="reference" attrs="{'readonly': [('state','!=','draft')]}"/>
