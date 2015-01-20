@@ -100,10 +100,10 @@ tr.box2 {
 	<caption><h3>Lectura del Turno</h3></caption>
 	<thead>
 	<tr>
-		<th scope="col" style="width:25%;">Descripcion</th>
-		<th scope="col" style="width:25%;">Nivel Final</th>
-		<th scope="col" style="width:25%;">Diferencia Final</th>
-		<th scope="col" class="box3" style="width:25%;">Total</th>
+		<th scope="col" class="box3" style="width:10%;">Descripcion</th>
+		<th scope="col" class="box3" style="width:33%;">Nivel Final</th>
+		<th scope="col" class="box3" style="width:28%;">Diferencia Final</th>
+		<th scope="col" class="box3" style="width:28%;">Total</th>
 	</tr>
 	</thead>
 	<tbody style="align='center'">
@@ -113,8 +113,8 @@ tr.box2 {
 </tr>
 <tr>
 <td></td>
-			<td><span t-field="a.levelt"/></td>
-			<td><span t-field="a.levelf"/></td>
+			<td class="box3"><span t-field="a.levelt"/></td>
+			<td class="box3"><span t-field="a.levelf"/></td>
 			<td class="box3"><span t-field="a.price_list"/></td>
     </tr>
 </t>
