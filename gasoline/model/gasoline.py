@@ -161,7 +161,7 @@ class turn(osv.Model):
 				totalmoney+=order.amount_total
 			for line in turn.reading_end:
 				totalcash+= line.price_list
-			result[turn.id] = totalcash-totalmoney
+			result[turn.id] = -totalcash+totalmoney
 		return result
 	def _get_inv(self, cr, uid, ids, field, arg, context=None):
 		result = {}

@@ -17,10 +17,16 @@ tr.box {
     border: 2px solid black;
     margin: 25px;
 }
+td.box3 {
+    text-align: right;
+}
+th.box3 {
+    text-align: right;
+}
 tr.box2 {
     width: 300px;
     padding: 25px;
-    border: 1px black;
+    border: 1px solid black;
     margin: 25px;
 }
 </style>
@@ -28,7 +34,7 @@ tr.box2 {
 
 <table  style="width:100%; font-size:20px">
 	<tbody>
-<tr class="box2">
+<tr >
 <td colspan="3">
 <center>
 <h2>Cierre de Turno</h2>
@@ -54,26 +60,29 @@ tr.box2 {
 	<caption><h3>Lectura del Turno</h3></caption>
 	<thead>
 	<tr>
-		<th scope="col" style="width:50%;">Descripcion</th>
-		<th scope="col" style="width:20%;">Nivel Final</th>
-		<th scope="col" style="width:20%;">Diferencia Final</th>
-		<th scope="col" class="text-right" style="width:10%;">Total</th>
+		<th scope="col" style="width:25%;">Descripcion</th>
+		<th scope="col" style="width:25%;">Nivel Final</th>
+		<th scope="col" style="width:25%;">Diferencia Final</th>
+		<th scope="col" class="box3" style="width:25%;">Total</th>
 	</tr>
 	</thead>
 	<tbody style="align='center'">
 	<t t-foreach="o.reading_finish" t-as="a">
     <tr>
-      <td scope="row">	<span t-field="a.description"/>-<span t-field="a.name"/></td>
+      <td scope="row" colspan="4"><span t-field="a.description"/>-<span t-field="a.name"/></td>
+</tr>
+<tr>
+<td></td>
 			<td><span t-field="a.levelt"/></td>
 			<td><span t-field="a.levelf"/></td>
-			<td class="text-right"><span t-field="a.price_list"/></td>
+			<td class="box3"><span t-field="a.price_list"/></td>
     </tr>
 </t>
     <tr>
       <th>	Total</th>
 			<td></td>
 			<td></td>
-			<th class="text-right"><span t-field="o.reading"/></th>
+			<th class="box3"><span t-field="o.reading"/></th>
     </tr>
   </tbody>
 </table>
@@ -87,14 +96,14 @@ tr.box2 {
       <th colspan="2" scope="col"></th>
     </tr>
     <tr>
-      <th scope="col" class="text-right">Total</th>
+      <th scope="col" class="box3">Total</th>
     </tr>
   </thead>
   <tbody>
 <t t-foreach="o.journal_ids" t-as="a">
     <tr t-if="a.money &lt;&gt; 0.0">
       <td scope="row" >	<span t-field="a.journal_id.name"/></td>
-			<td class="text-right"><span t-field="a.money"/></td>
+			<td class="box3"><span t-field="a.money"/></td>
     </tr>
 </t>
 
@@ -102,7 +111,7 @@ tr.box2 {
 
     <tr>
       <th scope="row">	Total</th>
-			<th class="text-right"><span t-field="o.paid"/></th>
+			<th class="box3"><span t-field="o.paid"/></th>
     </tr>
   </tbody>
 </table>
@@ -114,7 +123,7 @@ tr.box2 {
     <tr>
       <th  scope="col">Referencia</th>
       <th scope="col">Factura</th>
-      <th class="text-right" scope="col">Total</th>
+      <th class="box3" scope="col">Total</th>
     </tr>
 
   </thead>
@@ -124,11 +133,11 @@ tr.box2 {
     <tr>
       <td scope="row" >	<span t-field="a.name"/></td>
 			<td><span t-field="a.invoice_id"/></td>
-			<td class="text-right"><span t-field="a.amount_total"/></td>
+			<td class="box3"><span t-field="a.amount_total"/></td>
     </tr>
 </t>
       <th scope="row">	Total</th><th></th>
-			<th class="text-right" ><span t-field="o.journal"/></th>
+			<th class="box3" ><span t-field="o.journal"/></th>
   </tbody>
 </table>
 <table style="width:100%; font-size:25px;">
@@ -138,21 +147,33 @@ tr.box2 {
 </th>
 </tr>
 <tr>
-<td style="width:80%;">Vendido :</td>
-<td><span t-field="o.sold"/></td>
+<td style="width:70%;" >Vendido :</td>
+<td class="box3"><span t-field="o.sold"/></td>
 </tr>
 <tr>
 <td>Facturado :</td>
-<td class="text-right"><span t-field="o.invoiced"/></td>
+<td class="box3"><span t-field="o.invoiced"/></td>
 </tr>
 <tr>
 <td >Pagado :</td>
-<td class="text-right"> <span t-field="o.paid"/></td>
+<td class="box3"> <span t-field="o.paid"/></td>
 </tr>
 <tr>
 <td>Diferencia :</td>
-<td class="text-right"><span t-field="o.difference"/></td>
+<td class="box3"><span t-field="o.difference"/></td>
 </tr>
+</table>
+<br/>
+<br/>
+<br/>
+<table>
+<tbody>
+<tr>
+<td>
+<span t-field="o.note"/>
+</td>
+</tr>
+</tbody>
 </table>
 
 						</div>
