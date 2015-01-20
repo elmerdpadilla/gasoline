@@ -107,7 +107,7 @@ class mcheck(osv.Model):
 					line_id= mline_obj.create(cr,uid,mline_data)
 					for lines2 in lines_array:
 						mline_obj.create(cr,uid,lines2)
-					return self.write(cr, uid, ids, {'state':'posted','number':name,'move_id':}, context=context)
+					return self.write(cr, uid, ids, {'state':'posted','number':name,'move_id':move_id}, context=context)
 				else:
 					raise osv.except_osv(_('amount total is 0'),_("the value of total is 0") )
 			else:
@@ -126,7 +126,7 @@ class mcheck(osv.Model):
 						totald+=lines.amount
 					if lines.type=='cr':
 						totalc+=lines.amount
-			result[mcheck.id]=totald-totalc
+			result[mcheck.id]=self.addComa(str(totald-totalc))
 		return result	
 	def _get_totaldebit(self, cr, uid, ids, field, arg, context=None):
 		result = {}
@@ -135,7 +135,7 @@ class mcheck(osv.Model):
 				totald=0
 				for lines in mcheck.move_ids:
 					totald+=lines.debit
-			result[mcheck.id]=totald
+			result[mcheck.id]=self.addComa(str(totald))
 		return result	
 	def _get_totalcredit(self, cr, uid, ids, field, arg, context=None):
 		result = {}
@@ -144,7 +144,7 @@ class mcheck(osv.Model):
 				totalc=0
 				for lines in mcheck.move_ids:
 					totalc+=lines.credit
-			result[mcheck.id]=totalc
+			result[mcheck.id]=self.addComa(str(totalc))
 		return result	
 
 
@@ -176,14 +176,15 @@ class mcheck(osv.Model):
 		'name':fields.text('Memo',  ),
 		'date':fields.date('Date',  select=True, 
                            help="Effective date for accounting entries", ),
-		'amount': fields.function(_get_totald,type='float',string='Total', digits_compute=dp.get_precision('Account'),),
-		'amountdebit': fields.function(_get_totaldebit,type='float',string='Total', digits_compute=dp.get_precision('Account'),),
-		'amountcredit': fields.function(_get_totalcredit,type='float',string='Total', digits_compute=dp.get_precision('Account'),),
+		'amount': fields.function(_get_totald,type='char',string='Total', ),
+		'amountdebit': fields.function(_get_totaldebit,type='char',string='Total', ),
+		'amountcredit': fields.function(_get_totalcredit,type='char',string='Total',),
 		'amounttext': fields.function(_get_totalt,type='char',string='Total',),
 		'tax_amount':fields.float('Tax Amount', digits_compute=dp.get_precision('Account'), ),
 		'reference': fields.char('Pay to', 
-		                         help="Transaction reference number.", copy=False),
+		                         help="Transaction reference number.", copy=False,required=True),
 		'number': fields.char('Number'),
+		'obs':fields.text('obs',  ),
         	'type':fields.selection([
 			('sale','Sale'),
 			('purchase','Purchase'),
@@ -405,6 +406,13 @@ class mcheck(osv.Model):
 
 	    return output
 
+	def addComa(self, snum ):
+		s = snum;
+		i = s.index('.') # Se busca la posición del punto decimal
+		while i > 3:
+			i = i - 3
+			s = s[:i] +  ',' + s[i:]
+		return s
 
 
 

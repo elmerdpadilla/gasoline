@@ -10,10 +10,25 @@
 	<t t-call="gasoline.external_layout_gasoline">
 </t>
 
+<style>
+tr.box {
+    width: 300px;
+    padding: 25px;
+    border: 2px solid black;
+    margin: 25px;
+}
+tr.box2 {
+    width: 300px;
+    padding: 25px;
+    border: 1px black;
+    margin: 25px;
+}
+</style>
 
-<table border="0" style="width:100%; font-size:20px">
+
+<table  style="width:100%; font-size:20px">
 	<tbody>
-<tr>
+<tr class="box2">
 <td colspan="3">
 <center>
 <h2>Cierre de Turno</h2>
@@ -48,14 +63,14 @@
 	<tbody style="align='center'">
 	<t t-foreach="o.reading_finish" t-as="a">
     <tr>
-      <td scope="row">	<span t-field="a.description"/></td>
+      <td scope="row">	<span t-field="a.description"/>-<span t-field="a.name"/></td>
 			<td><span t-field="a.levelt"/></td>
 			<td><span t-field="a.levelf"/></td>
 			<td class="text-right"><span t-field="a.price_list"/></td>
     </tr>
 </t>
     <tr>
-      <th scope="row">	Total</th>
+      <th>	Total</th>
 			<td></td>
 			<td></td>
 			<th class="text-right"><span t-field="o.reading"/></th>

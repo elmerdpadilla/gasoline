@@ -39,19 +39,19 @@
                   </header>
                    <sheet string="Accounting Voucher">
                     <group col="4" colspan="4"> 
-                  	 <field name="journal_id" widget="selection" domain="[('checkmiscelaneous','=',True)]" />
+                  	 <field name="journal_id" widget="selection" domain="[('checkmiscelaneous','=',True)]" attrs="{'readonly': [('state','!=','draft')]}" />
 			 <field name="number" readonly="1"/>           
    			 <field name="date" />
             	     </group>
                     <group col="2" colspan="4">    
-<field name="reference" attrs="{'readonly': [('state','=','posted')]}"/>
-                        <field name="name"  attrs="{'readonly': [('state','=','posted')]}"/>
+<field name="reference" attrs="{'readonly': [('state','!=','draft')]}"/>
+                        <field name="name"  attrs="{'readonly': [('state','!=','draft')]}"/>
                         
              </group>
 
                     <notebook colspan="4">
                         <page string="Voucher Entry">
-                          <field name="mcheck_ids"  mode="tree" widget="one2many_list">
+                          <field name="mcheck_ids"  mode="tree" widget="one2many_list" attrs="{'readonly': [('state','!=','draft')]}">
 				<tree editable="top">
 					<field name="account_id" />
 					<field name="name"/>
@@ -79,6 +79,9 @@
                         </page>
                        
                     </notebook>
+<group >
+ <field name="obs" attrs="{'invisible': [('state','!=','cancel')]}"/>
+</group>
                   </sheet>
                 </form>
             </field>
