@@ -21,7 +21,7 @@
 				</field>
 		</record>
 
-    <menuitem action="mcheck_action_form_mcheck" id="mcheck_mcheck" parent="account.menu_finance_bank_and_cash" sequence="20" groups="check.group_check_manager"/>
+    <menuitem action="mcheck_action_form_mcheck" id="mcheck_mcheck" parent="account.menu_finance_bank_and_cash" sequence="20" groups="mcheck.group_check_manager"/>
 
 
 
