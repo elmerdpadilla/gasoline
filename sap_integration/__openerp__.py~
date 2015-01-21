@@ -7,7 +7,7 @@
 	'description': """SAP Integration""",
 	'data':[
 		'data/account_fiscal_position.xml',
-		'view/sap_integration.xml',
+		'view/sap_integration.xml
 	],
 	'update_xml' : [
 	],
