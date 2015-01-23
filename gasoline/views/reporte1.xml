@@ -199,7 +199,10 @@ tr.box2 {
 <td>S/Vendido :</td>
 <td class="box3"><span t-field="o.sold"/></td>
 </tr>
-
+<tr>
+<td>Diferencia por pago :</td>
+<td class="box3"><span t-field="o.pdifference"/></td>
+</tr>
 <tr>
 <td>Diferencia :</td>
 <td class="box3"><span t-field="o.difference"/></td>

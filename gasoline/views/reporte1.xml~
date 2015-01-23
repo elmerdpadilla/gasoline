@@ -100,8 +100,8 @@ tr.box2 {
 	<caption><h3>Lectura del Turno</h3></caption>
 	<thead>
 	<tr>
-		<th scope="col" class="box3" style="width:15%;">Descripcion</th>
-		<th scope="col" class="box3" style="width:28%;">Nivel Final</th>
+		<th scope="col" class="box3" style="width:10%;">Descripcion</th>
+		<th scope="col" class="box3" style="width:33%;">Nivel Final</th>
 		<th scope="col" class="box3" style="width:28%;">Diferencia Final</th>
 		<th scope="col" class="box3" style="width:28%;">Total</th>
 	</tr>
@@ -199,7 +199,10 @@ tr.box2 {
 <td>S/Vendido :</td>
 <td class="box3"><span t-field="o.sold"/></td>
 </tr>
-
+<tr>
+<td>Diferencia por pago :</td>
+<td class="box3"><span t-field="o.difference"/></td>
+</tr>
 <tr>
 <td>Diferencia :</td>
 <td class="box3"><span t-field="o.difference"/></td>

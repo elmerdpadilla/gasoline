@@ -76,11 +76,31 @@ class turn(osv.Model):
 		print ids
 		id = ids[0]
 		porder_obj= self.pool.get('pos.order')
+		porderline_obj= self.pool.get('pos.order.line')
 		orderdata={}
 		orderdata['is_gasoline']=True
 		orderdata['turn_id']=id
 		order_id=porder_obj.create(cr,uid,orderdata)
-		print order_id
+		array=[];
+		for turn in self.browse(cr,uid,ids,context=context):
+			for reading in turn.reading_init:
+				if reading.levelf > 0:
+					journal_ids = self.pool.get('pos.order.line').search(cr,uid,[('order_id','=',order_id),('product_id','=',reading.product_id.id)],context=context)
+					print journal_ids
+					print "#"
+					if len(journal_ids)==0:
+						orderlinedata={}
+						orderlinedata['order_id']=order_id
+						orderlinedata['product_id']=reading.product_id.id
+						orderlinedata['price_unit']=reading.product_id.list_price
+						orderlinedata['qty']=reading.levelf
+						orderline_id=porderline_obj.create(cr,uid,orderlinedata)
+						array.append(orderlinedata)
+					else:
+						ca=self.pool.get('pos.order.line').browse(cr,uid,journal_ids[0],context=context).qty+reading.levelf
+						self.pool.get('pos.order.line').write(cr,uid,journal_ids[0],{'qty':ca},context=context)
+
+
 		return {
 	    'domain': "[('turn_id','=', " + str(id) + ")]",
             'type': 'ir.actions.act_window',
@@ -161,7 +181,7 @@ class turn(osv.Model):
 				totalmoney+=order.amount_total
 			for line in turn.reading_end:
 				totalcash+= line.price_list
-			result[turn.id] = -totalcash+totalmoney
+			result[turn.id] = -totalcash+totalmoney+turn.pdifference
 		return result
 	def _get_inv(self, cr, uid, ids, field, arg, context=None):
 		result = {}
@@ -170,6 +190,15 @@ class turn(osv.Model):
 			totalcash=0
 			for order in turn.order_ids:
 				totalmoney+=order.invoice_id.amount_total
+			result[turn.id] = totalmoney
+		return result
+	def _get_order_diff(self, cr, uid, ids, field, arg, context=None):
+		result = {}
+		for turn in self.browse(cr, uid, ids, context=context):
+			totalmoney=0
+			totalcash=0
+			for order in turn.order_ids:
+				totalmoney+=order.difference
 			result[turn.id] = totalmoney
 		return result
 	def _get_paid(self, cr, uid, ids, field, arg, context=None):
@@ -221,6 +250,7 @@ class turn(osv.Model):
 	    'journal_ids' : fields.one2many('gasoline.journal','turn_id',string="payment methods",domain=[('money','>',0.0)]),
 	    'note':fields.text(string='Note'),
 	    'difference':fields.function(_get_diff,type='float', string='Difference'),
+	    'pdifference':fields.function(_get_order_diff,type='float', string='Difference of price'),
 	    'invoiced':fields.function(_get_inv,type='float', string='Invoiced'),
 	    'paid':fields.function(_get_paid,type='float', string='Paid'),
 	    'sold':fields.function(_get_sold,type='float', string='Sold'),
@@ -312,6 +342,7 @@ class reading(osv.Model):
 		'date':fields.datetime(string="date Init"),
 		'datef':fields.datetime(string="date end"),
 		'level':fields.float(string="level Init",digits=(15,4)),
+		'leveldiff':fields.float(string="level Init",digits=(15,4)),
 		'levelt':fields.float(string="level end",digits=(15,4)),
 		'levelf':fields.function(_get_level,type='float', string='finish levels',digits=(15,4)),
 		'description':fields.text(string="Description"),
@@ -323,7 +354,8 @@ class reading(osv.Model):
 		'side_product_id':fields.many2one('gasoline.side_product',string="level id"),
 	}
 	_defaults = {
-	'date' : datetime.now()
+	'leveldiff' : 0,
+	'date' : datetime.now(),
 		}
 	_sql_constraints = [
         ('level_of_reading', 'CHECK (levelt >= level)', 'the final level must be greater than the initial'),
@@ -473,9 +505,18 @@ class product_template(osv.osv):
 
 class pos_order(osv.osv):
 	_inherit = 'pos.order'
+	def _get_diff(self,cr,uid,ids,field,arg,context=None):
+		res = {}
+		for order in self.browse(cr,uid,ids,context=context):
+			total=0
+			for line in order.lines:
+				total+=(line.product_id.list_price-line.price_unit)*line.qty
+			res[order.id]=total
+		return res
 	_columns = {
         'is_gasoline': fields.boolean('Is Gasoline', help="Check if, this is a product is Gasoline."),
 	'turn_id':fields.many2one('gasoline.turn',string="Turn"),
+	'difference':fields.function(_get_diff,type='float', string='Diferencia'),
 }
 class pos_config(osv.osv):
 	_inherit = 'pos.config'

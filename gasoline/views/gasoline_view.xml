@@ -287,6 +287,7 @@ states="closed" class="oe_highlight" />
 <field name="sold" attrs="{'invisible' : [('state', 'not in', ['closed','finish'])] }"/>
 <field name="invoiced" attrs="{'invisible' : [('state', 'not in', ['closed','finish'])] }"/>
 <field name="paid" attrs="{'invisible' : [('state', 'not in', ['closed','finish'])] }"/>
+<field name="pdifference" attrs="{'invisible' : [('state', 'not in', ['closed','finish'])] }"/>
 <field name="difference" attrs="{'invisible' : [('state', 'not in', ['closed','finish'])] }"/>
 </group>
 <notebook>
@@ -601,6 +602,9 @@ states="closed" class="oe_highlight" />
 <field name="session_id" required="1" domain="[('config_id.combustible','=',True),('state','=','opened')]" widget="selection"/>
     </field>
 
+<field name="amount_total" position="after">
+<field name="difference"/>
+</field>
 
     </field>
 </record>
