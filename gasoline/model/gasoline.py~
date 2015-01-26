@@ -73,7 +73,6 @@ class turn(osv.Model):
 			self.pool.get('gasoline.user').write(cr,uid,turn.user_id.id,{'status':'active'},context=context)
 		return self.write(cr, uid, ids, {'state':'progress'}, context=context)
 	def action_new(self, cr, uid, ids, context=None):
-		print ids
 		id = ids[0]
 		porder_obj= self.pool.get('pos.order')
 		porderline_obj= self.pool.get('pos.order.line')
@@ -86,19 +85,34 @@ class turn(osv.Model):
 			for reading in turn.reading_init:
 				if reading.levelf > 0:
 					journal_ids = self.pool.get('pos.order.line').search(cr,uid,[('order_id','=',order_id),('product_id','=',reading.product_id.id)],context=context)
-					print journal_ids
-					print "#"
+
 					if len(journal_ids)==0:
 						orderlinedata={}
 						orderlinedata['order_id']=order_id
 						orderlinedata['product_id']=reading.product_id.id
+						orderlinedata['price2']=reading.product_id.list_price
 						orderlinedata['price_unit']=reading.product_id.list_price
 						orderlinedata['qty']=reading.levelf
 						orderline_id=porderline_obj.create(cr,uid,orderlinedata)
-						array.append(orderlinedata)
+						array.append(orderline_id)
 					else:
 						ca=self.pool.get('pos.order.line').browse(cr,uid,journal_ids[0],context=context).qty+reading.levelf
 						self.pool.get('pos.order.line').write(cr,uid,journal_ids[0],{'qty':ca},context=context)
+
+			for order in turn.order_ids:
+				for order_line in order.lines:
+					if order_line.id not in array:
+						line_ids = self.pool.get('pos.order.line').search(cr,uid,[('product_id','=',order_line.product_id.id),('order_id','=',order_line.order_id.id)],context=context)
+						if len(line_ids)>0:
+							line2_ids = self.pool.get('pos.order.line').search(cr,uid,[('product_id','=',order_line.product_id.id),('id','in',array)],context=context)
+							if len(line2_ids)>0:
+								ca=self.pool.get('pos.order.line').browse(cr,uid,line2_ids[0],context=context).qty-self.pool.get('pos.order.line').browse(cr,uid,line_ids[0],context=context).qty
+								if ca>0:
+									self.pool.get('pos.order.line').write(cr,uid,line2_ids[0],{'qty':ca},context=context)
+								else:
+									self.pool.get('pos.order.line').unlink(cr,uid,line2_ids[0],context=context)
+
+				
 
 
 		return {
@@ -266,7 +280,6 @@ class turn(osv.Model):
 class product(osv.Model):
 	_name = 'gasoline.product'
 	def action_new(self, cr, uid, ids, context=None):
-		print ids
 		id = ids[0]
 		porder_obj= self.pool.get('gasoline.reading2')
 		orderdata={}
@@ -413,10 +426,6 @@ class reading2(osv.Model):
 	def create(self, cr, uid, values, context=None):
 		id=self.pool.get('gasoline.product').browse(cr,uid,values['product_id2'],context=context).product_id.id
 		product_obj=self.pool.get('product.template').browse(cr,uid,id,context=context)
-		print "#"*50
-		print values['product_id2']
-		print id
-		print product_obj.qty_available
 		values['qty_available']=product_obj.qty_available
 		values['qty_virtual']=product_obj.qty_available-values['level']
 		b =super(reading2, self).create(cr, uid, values, context=context)
@@ -510,7 +519,10 @@ class pos_order(osv.osv):
 		for order in self.browse(cr,uid,ids,context=context):
 			total=0
 			for line in order.lines:
-				total+=(line.product_id.list_price-line.price_unit)*line.qty
+				if line.price2:
+					if line.price_unit != line.product_id.list_price:
+						total+=(line.price2-line.price_unit)*line.qty
+				
 			res[order.id]=total
 		return res
 	_columns = {
@@ -518,6 +530,37 @@ class pos_order(osv.osv):
 	'turn_id':fields.many2one('gasoline.turn',string="Turn"),
 	'difference':fields.function(_get_diff,type='float', string='Diferencia'),
 }
+class gasoline_pos_order_line(osv.osv):
+	_inherit = 'pos.order.line'
+	def onchange_product_id(self, cr, uid, ids, pricelist, product_id, qty=0, partner_id=False, context=None):
+
+		context = context or {}
+		if not product_id:
+			return {}
+		if not pricelist:
+			raise osv.except_osv(_('No Pricelist!'),
+			_('You have to select a pricelist in the sale form !\n' \
+			'Please set one before choosing a product.'))
+
+		price = self.pool.get('product.pricelist').price_get(cr, uid, [pricelist],product_id, qty or 1.0, partner_id)[pricelist]
+
+		result = self.onchange_qty(cr, uid, ids, product_id, 0.0, qty, price, context=context)
+		result['value']['price_unit'] = price
+		result['value']['price2'] = price
+		return result
+	def create(self, cr, uid, values, context=None):
+		b =super(gasoline_pos_order_line, self).create(cr, uid, values, context=context)
+		price=self.pool.get('pos.order.line').browse(cr,uid,b,context=context).product_id.list_price
+		self.pool.get('pos.order.line').write(cr,uid,b,{'price2':price},context=context)
+		return b
+	_columns = {
+        'price2': fields.float('price2'),
+}
+	_defaults = {
+	'price2' : 0,
+		} 
+
+
 class pos_config(osv.osv):
 	_inherit = 'pos.config'
 	_columns = {
