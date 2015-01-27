@@ -201,7 +201,7 @@ tr.box2 {
 </tr>
 <tr>
 <td>Diferencia por pago :</td>
-<td class="box3"><span t-field="o.difference"/></td>
+<td class="box3"><span t-field="o.pdifference"/></td>
 </tr>
 <tr>
 <td>Diferencia :</td>

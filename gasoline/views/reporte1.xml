@@ -12,6 +12,12 @@
     </t>
     <div class="header">
 
+
+
+</div>	
+				
+						<div class="page">
+
               <div class="row">
             <div class="col-xs-3">
                 <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % company.logo" style="height: 80px;"/>
@@ -24,30 +30,20 @@
             </div>
         </div>
         <div class="row">
-      
                   <p>
                 	<strong>Dirección:</strong>
                 	<span t-field="company.street"/>
 			<br/>
-			<strong>RTN:</strong>
+			<strong>RTN :</strong>
                 	<span t-field="company.company_registry"/>
 			<br/>
 			<strong>Tel:</strong>
                 	<span t-field="company.phone"/>
            	  </p>
-
-           
-	    
-
         </div>
 
            
 
-
-
-</div>	
-				
-						<div class="page">
 
 
 <style>
