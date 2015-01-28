@@ -91,11 +91,13 @@
             <field name="name">mcheck.mcheck.tree</field>
             <field name="model">mcheck.mcheck</field>
             <field name="arch" type="xml">
-                <tree string="miscellaneous checks">                 
+                <tree string="miscellaneous checks">  
+			<field name="number" />               
                         <field name="date" />
                         <field name="journal_id" widget="selection" />
                         <field name="name" colspan="2"/>
                         <field name="reference"/>
+			<field name="amount"/>
 			<field name="state"/>
 
                 </tree>

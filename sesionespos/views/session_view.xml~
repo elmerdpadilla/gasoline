@@ -70,7 +70,7 @@
             <field name="inherit_id" ref="point_of_sale.view_pos_session_tree"/>
             <field name="arch" type="xml">
 		<field name="state" position="after">
-		<field name="venta_bruta2" string="Venta Bruta" attrs="{'invisible':[('state','!=','closed')]}"/>
+		<field name="venta_bruta" string="Venta Bruta" attrs="{'invisible':[('state','!=','closed')]}"/>
 		<field name="subtotal" invisible="1"/>
 		<field name="isv" invisible="1"/>
 		<field name="venta_bruta" invisible="1"/>

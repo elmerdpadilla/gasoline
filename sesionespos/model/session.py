@@ -14,20 +14,29 @@ class sessionpos(osv.Model):
 		total=0
 		totali=0		
 		for session in self.browse(cr,uid,ids,context=context):
-				
 			totali=session.cash_register_balance_end
-			totalf=session.cash_register_balance_end_real	
-			total= (session.cash_register_balance_end - session.cash_register_balance_end_real)
+			totalf=session.cash_register_balance_end_real
+			for order in session.order_ids:
+				flag=False
+				for producto in order.lines:
+					if producto.product_id.expense_pdt:
+					    print producto.product_id.name
+					    flag=True
+				if flag==True:
+					totali-=(order.amount_total*2)
+	
+			total= (totali - totalf)
 			res[session.id]=total
+			
 			if total<0:
 				total=-total
 			else:
 				total=-total
+
 			if session.state!='closed':
 			    self.write(cr,uid,session.id,{'diferencia2':total},context=context)
 			    self.write(cr,uid,session.id,{'dn_cierre':totali},context=context)
 			    self.write(cr,uid,session.id,{'dn_reportado':totalf},context=context)
-			res[session.id]= total
 		return res
 
 
@@ -35,21 +44,17 @@ class sessionpos(osv.Model):
 	def _calc_vb(self,cr,uid,ids,fields,args,context=None):
 		res={}
 		
+		flag=False
 		for session in self.browse(cr,uid,ids,context=context):
-			total=0
-		    	for order in session.order_ids:
-			    total=0
-			 	
-			    for d in session.statement_ids:
-				if d.journal_id.code != "CTSS":
-					
-					total+=d.balance_end_real
-			
-			total-=(session.diferencia2+session.cash_register_balance_start)
-			if total<0:
-				total=0
-		    	res[session.id]=total
-			self.write(cr,uid,session.id,{'venta_bruta2':total},context=context)				 
+		    total=0
+		    for order in session.order_ids:
+			flag=False
+			for producto in order.lines:
+				if producto.product_id.expense_pdt or producto.product_id.income_pdt:
+				    flag=True
+			if flag==False:
+		        	total+=order.amount_total
+		    res[session.id]=total				 
 		return res
 
 
@@ -358,7 +363,6 @@ class sessionpos(osv.Model):
 	   'diferencia':fields.function(_fun_diferencia,string="Diferencia"),
 	   'diferencia2':fields.float('diferencia2'),
 	   'venta_bruta':fields.function(_calc_vb,'venta bruta',type="float"),
-	   'venta_bruta2':fields.float('venta bruta'),
 	   'isv':fields.function(_calc_isv,'ISV'),
 	   'subtotal':fields.function(_calc_subtotal,'subtotal'),
 	   'nro_facturas':fields.function(_calc_no_facturas,'nro facturas',type="char"),

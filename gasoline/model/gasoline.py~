@@ -125,7 +125,6 @@ class turn(osv.Model):
             'target': 'current',
         }
 	def action_view(self, cr, uid, ids, context=None):
-		print ids
 		id = ids[0]
 		return {
 	    'domain': "[('turn_id','=', " + str(id) + ")]",

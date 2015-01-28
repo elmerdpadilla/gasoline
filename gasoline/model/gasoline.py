@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
-
 from openerp.osv import fields, osv
 from datetime import datetime
 import locale
 import pytz
 from openerp.tools.translate import _
-
 class dispenser(osv.Model):
 	_name = 'gasoline.dispenser'
 	_columns = {

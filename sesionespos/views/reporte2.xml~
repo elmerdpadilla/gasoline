@@ -3,7 +3,12 @@
 	<data>
 		<template id="report_product">
 			<t t-call="report.html_container">
-			
+			    <t t-if="o and 'company_id' in o">
+        <t t-set="company" t-value="o.company_id"></t>
+    </t>
+    <t t-if="not o or not 'company_id' in o">
+        <t t-set="company" t-value="res_company"></t>
+    </t>
 			
 				    <div class="page">
 				<br/><br/><br/>
@@ -11,7 +16,7 @@
 			
 					<br/>
 <t t-foreach="docs" t-as="o">	
-<h5><span t-field="o.users"/></h5>
+<span t-field="o.users"/>
 			
 					</t>
 
