@@ -285,8 +285,10 @@ states="closed" class="oe_highlight" />
 </notebook>
 <group string="Totales">
 <field name="sold" attrs="{'invisible' : [('state', 'not in', ['closed','finish'])] }"/>
+<field name="other" attrs="{'invisible' : [('state', 'not in', ['closed','finish'])] }"/>
 <field name="invoiced" attrs="{'invisible' : [('state', 'not in', ['closed','finish'])] }"/>
 <field name="paid" attrs="{'invisible' : [('state', 'not in', ['closed','finish'])] }"/>
+
 <field name="pdifference" attrs="{'invisible' : [('state', 'not in', ['closed','finish'])] }"/>
 <field name="difference" attrs="{'invisible' : [('state', 'not in', ['closed','finish'])] }"/>
 </group>

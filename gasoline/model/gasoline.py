@@ -192,7 +192,7 @@ class turn(osv.Model):
 				totalmoney+=order.amount_total
 			for line in turn.reading_end:
 				totalcash+= line.price_list
-			result[turn.id] = -totalcash+totalmoney+turn.pdifference
+			result[turn.id] = -totalcash+totalmoney+turn.pdifference-turn.other
 		return result
 	def _get_inv(self, cr, uid, ids, field, arg, context=None):
 		result = {}
@@ -219,6 +219,22 @@ class turn(osv.Model):
 			totalcash=0
 			for journal in turn.journal_ids:
 				totalmoney+=journal.money
+			result[turn.id] = totalmoney
+		return result
+	def _get_other(self, cr, uid, ids, field, arg, context=None):
+		result = {}
+		for turn in self.browse(cr, uid, ids, context=context):
+			totalmoney=0
+			totalcash=0
+			arrayproduct = []
+			idsproduct=self.pool.get('gasoline.product').search(cr,uid,[],context=context)
+			for product in self.pool.get('gasoline.product').browse(cr,uid,idsproduct,context=context):
+				arrayproduct.append(product.product_id.id)
+			for order in turn.order_ids:
+				for line in order.lines:
+					if line.product_id.id not in arrayproduct:
+						totalmoney+=line.price_subtotal_incl
+				#totalmoney+=journal.money
 			result[turn.id] = totalmoney
 		return result
 	def _get_sold(self, cr, uid, ids, field, arg, context=None):
@@ -264,6 +280,7 @@ class turn(osv.Model):
 	    'pdifference':fields.function(_get_order_diff,type='float', string='Difference of price'),
 	    'invoiced':fields.function(_get_inv,type='float', string='Invoiced'),
 	    'paid':fields.function(_get_paid,type='float', string='Paid'),
+	    'other':fields.function(_get_other,type='float', string='Other product'),
 	    'sold':fields.function(_get_sold,type='float', string='Sold'),
 	    'reading':fields.function(_get_reading,type='float', string='Reading'),
 	    'journal':fields.function(_get_journal,type='float', string='Journal'),

@@ -58,6 +58,7 @@ td.box3 {
 }
 th.box3 {
     text-align: right;
+	font-size:15px;
 }
 tr.box2 {
     width: 300px;
@@ -184,23 +185,27 @@ tr.box2 {
 </tr>
 
 <tr>
-<td  style="width:60%;" >Facturado :</td>
+<td  style="width:60%; font-size:15px;" >Venta Credito :</td>
 <td class="box3"><span t-field="o.invoiced"/></td>
 </tr>
 <tr>
-<td >Pagado :</td>
+<td  style="font-size:15px;">Venta Contado :</td>
 <td class="box3"> <span t-field="o.paid"/></td>
 </tr>
 <tr>
-<td>S/Vendido :</td>
+<td style="font-size:15px;"> Esperado Combustible :</td>
 <td class="box3"><span t-field="o.sold"/></td>
 </tr>
 <tr>
-<td>Diferencia por pago :</td>
+<td style="font-size:15px;">Esperado otros :</td>
+<td class="box3"> <span t-field="o.other"/></td>
+</tr>
+<tr>
+<td style="font-size:15px;">Diferencia por precio :</td>
 <td class="box3"><span t-field="o.pdifference"/></td>
 </tr>
 <tr>
-<td>Diferencia :</td>
+<td style="font-size:15px;">Diferencia :</td>
 <td class="box3"><span t-field="o.difference"/></td>
 </tr>
 </table>
