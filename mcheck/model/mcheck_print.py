@@ -10,4 +10,14 @@ class reporte(osv.AbstractModel):
 			'docs': self.pool[report.model].browse(cr, uid, ids, context=context),
 			}
 		return report_obj.render(cr, uid, ids, 'mcheck.mcheck_print',docargs, context=context)
-
+class reporte2(osv.AbstractModel):
+	_name = 'report.mcheck.mcheck_print2'
+	def render_html(self, cr, uid, ids, data=None, context=None):
+		report_obj = self.pool['report']
+		report = report_obj._get_report_from_name(cr, uid, 'mcheck.mcheck_print2')
+		docargs = {
+			'doc_ids': ids,
+			'doc_model': report.model,
+			'docs': self.pool[report.model].browse(cr, uid, ids, context=context),
+			}
+		return report_obj.render(cr, uid, ids, 'mcheck.mcheck_print2',docargs, context=context)

@@ -10,6 +10,7 @@
 		'views/journal_view.xml',
 		'views/mcheck_view.xml',	
 		'views/reporte1.xml' ,
+				'reports/reporte2.xml' ,
 			'views/layouts.xml' ,
 			'views/mcheck_reports.xml'
 	],

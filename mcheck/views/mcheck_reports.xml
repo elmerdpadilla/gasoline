@@ -12,6 +12,15 @@
    	 file="mcheck.mcheck_print"
         attachment="(object.state in ('finish'))"
 />
+	<report
+    	id="mcheck_mcheck_print2"
+    	model="account.voucher"
+    	string="print check2"
+   	 report_type="qweb-pdf"
+    	name="mcheck.mcheck_print2"
+   	 file="mcheck.mcheck_print2"
+        attachment="(object.state in ('finish'))"
+/>
 
 
     </data>
