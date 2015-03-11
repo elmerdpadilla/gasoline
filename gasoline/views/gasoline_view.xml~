@@ -285,8 +285,10 @@ states="closed" class="oe_highlight" />
 </notebook>
 <group string="Totales">
 <field name="sold" attrs="{'invisible' : [('state', 'not in', ['closed','finish'])] }"/>
+<field name="other" attrs="{'invisible' : [('state', 'not in', ['closed','finish'])] }"/>
 <field name="invoiced" attrs="{'invisible' : [('state', 'not in', ['closed','finish'])] }"/>
 <field name="paid" attrs="{'invisible' : [('state', 'not in', ['closed','finish'])] }"/>
+
 <field name="pdifference" attrs="{'invisible' : [('state', 'not in', ['closed','finish'])] }"/>
 <field name="difference" attrs="{'invisible' : [('state', 'not in', ['closed','finish'])] }"/>
 </group>
@@ -601,11 +603,21 @@ states="closed" class="oe_highlight" />
 
 <field name="session_id" position="replace">
 <field name="session_id" required="1" domain="[('config_id.combustible','=',True),('state','=','opened')]" widget="selection"/>
+<field name="nreference" />
     </field>
 
 <field name="amount_total" position="after">
 <field name="difference"/>
 </field>
+
+		<notebook position="inside">
+                <page string="Vehicle" attrs="{'invisible':[('partner_id','=',False)]}">
+		<group>
+		<field name="vehicle_id" on_change="onchange_vehicle_id(vehicle_id)" domain="[('partner_id','=',partner_id)]"/>
+		<field name="odometer" />
+		</group>
+		</page>
+		</notebook>
 
     </field>
 </record>
@@ -644,6 +656,18 @@ states="closed" class="oe_highlight" />
 </field>
     </field>
 </record>
+
+<record model="ir.ui.view" id="view_fleet_vehicle_form_inherit">
+    <field name="name">fleet.vehicle.form.inherit1</field>
+    <field name="model">fleet.vehicle</field>
+    <field name="inherit_id" ref="fleet.fleet_vehicle_form"/>
+    <field name="arch" type="xml">
+<field name="location" position="after">
+<field name="partner_id" />
+</field>
+</field>
+</record>
+
 
     </data>
 </openerp>

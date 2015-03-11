@@ -528,6 +528,18 @@ class product_template(osv.osv):
 
 class pos_order(osv.osv):
 	_inherit = 'pos.order'
+	def onchange_vehicle_id(self, cr, uid, ids, vehicle_id,  context=None):
+		context = context or {}
+		result={}
+		values={}
+		values['odometer']=None
+		print vehicle_id
+		print "#"*50
+		if not vehicle_id:
+			return {'value':values}
+		obj_vehicle=self.pool.get('fleet.vehicle').browse(cr,uid,vehicle_id,context=context)
+		values['odometer']=obj_vehicle.odometer
+		return {'value':values}
 	def _get_diff(self,cr,uid,ids,field,arg,context=None):
 		res = {}
 		for order in self.browse(cr,uid,ids,context=context):
@@ -536,18 +548,20 @@ class pos_order(osv.osv):
 				if line.price2:
 					if line.price_unit != line.product_id.list_price:
 						total+=(line.price2-line.price_unit)*line.qty
-				
 			res[order.id]=total
 		return res
 	_columns = {
         'is_gasoline': fields.boolean('Is Gasoline', help="Check if, this is a product is Gasoline."),
 	'turn_id':fields.many2one('gasoline.turn',string="Turn"),
 	'difference':fields.function(_get_diff,type='float', string='Diferencia'),
-}
+	'nreference':fields.char(string = "Reference Number"),
+	'odometer': fields.float(string = "Odometer"),
+	'vehicle_id':fields.many2one('fleet.vehicle',string="Vehicle"),
+	}
+
 class gasoline_pos_order_line(osv.osv):
 	_inherit = 'pos.order.line'
 	def onchange_product_id(self, cr, uid, ids, pricelist, product_id, qty=0, partner_id=False, context=None):
-
 		context = context or {}
 		if not product_id:
 			return {}
@@ -584,3 +598,56 @@ class pos_session(osv.osv):
 	_inherit = 'pos.session'
 class pos_order_line(osv.osv):
 	_inherit = 'pos.order.line'
+class pos_account_invoice(osv.osv):
+	_inherit = 'account.invoice'
+	def _get_nreference(self,cr,uid,ids,field,arg,context=None):
+		res = {}
+		order_obj=self.pool.get('pos.order')
+		for invoice in self.browse(cr,uid,ids,context=context):
+			order_ids=order_obj.search(cr,uid,[('invoice_id','=',invoice.id)],context=context)
+			total=""
+			for order in order_obj.browse(cr,uid,order_ids,context=context):
+				total=order.nreference
+			res[invoice.id]=total
+		return res
+	def _get_odometer(self,cr,uid,ids,field,arg,context=None):
+		res = {}
+		order_obj=self.pool.get('pos.order')
+		for invoice in self.browse(cr,uid,ids,context=context):
+			order_ids=order_obj.search(cr,uid,[('invoice_id','=',invoice.id)],context=context)
+			total=""
+			for order in order_obj.browse(cr,uid,order_ids,context=context):
+				total=order.vehicle_id.odometer
+			res[invoice.id]=total
+		return res
+	def _get_vehicle(self,cr,uid,ids,field,arg,context=None):
+		res = {}
+		order_obj=self.pool.get('pos.order')
+		for invoice in self.browse(cr,uid,ids,context=context):
+			order_ids=order_obj.search(cr,uid,[('invoice_id','=',invoice.id)],context=context)
+			total=""
+			for order in order_obj.browse(cr,uid,order_ids,context=context):
+				total=order.vehicle_id.model_id.modelname
+			res[invoice.id]=total
+		return res
+	def _get_plaque(self,cr,uid,ids,field,arg,context=None):
+		res = {}
+		order_obj=self.pool.get('pos.order')
+		for invoice in self.browse(cr,uid,ids,context=context):
+			order_ids=order_obj.search(cr,uid,[('invoice_id','=',invoice.id)],context=context)
+			total=""
+			for order in order_obj.browse(cr,uid,order_ids,context=context):
+				total=order.vehicle_id.license_plate
+			res[invoice.id]=total
+		return res
+	_columns = {
+	'nreference':fields.function(_get_nreference,type='char', string='Reference'),
+	'odometer': fields.function(_get_odometer,type='float', string='odometer'),
+	'vehicle':fields.function(_get_vehicle,type='char', string='vehicle'),
+	'plaque':fields.function(_get_plaque,type='char', string=' plaque'),
+	}
+class fleet_vehicle(osv.osv):
+	_inherit = 'fleet.vehicle'
+	_columns = {
+        'partner_id': fields.many2one('res.partner',string="Partner"),
+}
