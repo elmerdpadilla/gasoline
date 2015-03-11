@@ -8,6 +8,10 @@
 
 					    <div class="header">
 
+
+
+</div>	
+            <div class="page">
               <div class="row">
             <div class="col-xs-3">
                 <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % company.logo" style="height: 80px;"/>
@@ -27,18 +31,26 @@
 			<strong>RTN :</strong>
                 	<span t-field="company.company_registry"/>
 			<br/>
+			<strong>Email:</strong>
+                	<span t-field="company.email"/>
+			<br/>
 			<strong>Tel:</strong>
                 	<span t-field="company.phone"/>
            	  </p>
         </div>
-
-</div>	
-            <div class="page">
+<div class="row">
+       <p>
+                	<strong>Factura N:</strong>
+                	<span t-field="o.name"/>
+			<br/>
+ 			<strong>Cliente:</strong>
+                        <span t-field="o.partner_id"
+                           />
+           	  </p>
+</div>
                 <div class="row">
                     <div class="col-xs-12 text-center">
-                        
-                        <div t-field="o.partner_id"
-                            t-field-options='{"widget": "contact", "fields": ["address", "name", "phone", "fax"], "no_marker": true}'/>
+                       
                         User: <span t-field="o.user_id"/><br/>
                         Date: <span t-field="o.date_order"/><br/>
                     </div>
