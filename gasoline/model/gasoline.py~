@@ -558,6 +558,16 @@ class pos_order(osv.osv):
 						total+=(line.price2-line.price_unit)*line.qty
 			res[order.id]=total
 		return res
+	def _get_type_id(self,cr,uid,ids,field,arg,context=None):
+		res = {}
+		for order in self.browse(cr,uid,ids,context=context):
+			text="Sin Pago"
+			if order.invoice_id:
+				text="Factura Credito"
+			elif len(order.statement_ids)>0:
+				text="Factura Contado"
+			res[order.id]=text
+		return res
 	_columns = {
         'is_gasoline': fields.boolean('Is Gasoline', help="Check if, this is a product is Gasoline."),
 	'turn_id':fields.many2one('gasoline.turn',string="Turn"),
@@ -565,6 +575,7 @@ class pos_order(osv.osv):
 	'nreference':fields.char(string = "Reference Number"),
 	'odometer': fields.float(string = "Odometer"),
 	'vehicle_id':fields.many2one('fleet.vehicle',string="Vehicle"),
+	'type_id':fields.function(_get_type_id,type='char', string='Type'),
 	}
 
 class gasoline_pos_order_line(osv.osv):
@@ -654,7 +665,7 @@ class pos_account_invoice(osv.osv):
 	'vehicle':fields.function(_get_vehicle,type='char', string='vehicle'),
 	'plaque':fields.function(_get_plaque,type='char', string=' plaque'),
 	}
-class fleet_vehicle(osv.osv):
+class pos_fleet_vehicle(osv.osv):
 	_inherit = 'fleet.vehicle'
 	_columns = {
         'partner_id': fields.many2one('res.partner',string="Partner"),

@@ -220,7 +220,7 @@ RTN:<span t-field="company.company_registry"/>
 <br/>
 <br/>
 <br/>
-<div class="row">
+<div class="table table-condensed">
 <p>
 ___________________<br/>
 <strong>Recibí Conforme</strong>

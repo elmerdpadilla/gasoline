@@ -580,7 +580,7 @@ states="closed" class="oe_highlight" />
 				</field>
 		</record>
 
-<menuitem action="product_action_form_template" parent="dispenser_menu"  id="product_edit2"/>
+<menuitem action="product_action_form_template" parent="dispenser_menu"  id="product_edit2" string="Facturas"/>
 
 <record model="ir.ui.view" id="view_pos_pos_form1">
     <field name="name">pos.order.form.inherit1</field>
@@ -588,7 +588,7 @@ states="closed" class="oe_highlight" />
     <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
     <field name="arch" type="xml">
 <button name="action_invoice" position="replace">
-<button name="action_invoice" string="Invoice" type="object"  attrs="{'readonly': [('partner_id','=',False)]}" states="draft"/>
+<button name="action_invoice" string="Factura Credito" type="object"  attrs="{'readonly': [('partner_id','=',False)]}" states="draft"/>
 <button name="print_invoice" string="Imprimir Factura" type="object"/>
 </button>
 
@@ -605,6 +605,7 @@ states="closed" class="oe_highlight" />
 <field name="session_id" position="replace">
 <field name="session_id" required="1" domain="[('config_id.combustible','=',True),('state','=','opened')]" widget="selection"/>
 <field name="nreference" />
+<field name="type_id2" />
     </field>
 
 <field name="amount_total" position="after">
@@ -619,6 +620,9 @@ states="closed" class="oe_highlight" />
 		</group>
 		</page>
 		</notebook>
+<field name="name" position="replace">
+<field name="name" string="invoice"/>
+</field>
 
     </field>
 </record>
@@ -669,6 +673,52 @@ states="closed" class="oe_highlight" />
 </field>
 </record>
 
+<record model="ir.ui.view" id="view_account_invoice_form_inherit">
+    <field name="name">account.invoice.form.inherit1</field>
+    <field name="model">account.invoice</field>
+    <field name="inherit_id" ref="account.invoice_form"/>
+    <field name="arch" type="xml">
+
+<field name="origin" position="replace">
+</field>
+
+<field name="number" position="replace">
+<field name="origin"/>
+</field>
+
+</field>
+</record>
+
+<record model="ir.ui.view" id="view_account_invoice_tree_inherit">
+    <field name="name">account.invoice.tree.inherit1</field>
+    <field name="model">account.invoice</field>
+    <field name="inherit_id" ref="account.invoice_tree"/>
+    <field name="arch" type="xml">
+<field name="number" position="replace">
+<field name="origin" string="Factura"/>
+</field>
+
+</field>
+</record>
+
+<record model="ir.ui.view" id="view_pos_order_tree_inherit">
+    <field name="name">pos.order.tree.inherit</field>
+    <field name="model">pos.order</field>
+    <field name="inherit_id" ref="point_of_sale.view_pos_order_tree"/>
+    <field name="arch" type="xml">
+<field name="name" position="replace">
+<field name="name" string="Invoice"/>
+</field>
+
+<field name="invoice_id" position="replace">
+<field name="invoice_id" invisible="1"/>
+<field name="type_id2"/>
+</field>
+
+
+
+</field>
+</record>
 
     </data>
 </openerp>
