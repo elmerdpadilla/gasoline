@@ -589,6 +589,7 @@ states="closed" class="oe_highlight" />
     <field name="arch" type="xml">
 <button name="action_invoice" position="replace">
 <button name="action_invoice" string="Invoice" type="object"  attrs="{'readonly': [('partner_id','=',False)]}" states="draft"/>
+<button name="print_invoice" string="Imprimir Factura" type="object"/>
 </button>
 
 <field name="lines">

@@ -10,9 +10,75 @@
 					<t t-if="not o or not 'company_id' in o">
 						<t t-set="company" t-value="res_company"></t>
 					</t>
-					<div class="header">
-					</div>	
+					    <div class="header">
+
+              <div class="row">
+            <div class="col-xs-3">
+                <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % company.logo" style="height: 80px;"/>
+            </div>
+            <div class="col-xs-9 text-right" style="margin-top:20px;" t-field="company.rml_header1"/>
+        </div>
+        <div>
+            <div class="col-xs-12">
+                <div style="border-bottom: 1px solid black;"></div>
+            </div>
+        </div>
+        <div class="table table-condensed">
+                  <p>
+			<strong><span t-field="company.name"/></strong>
+                	
+			<br/>
+                	<span t-field="company.street"/><span t-field="company.street2"/>
+			<br/>
+			<strong>RTN :</strong>
+                	<span t-field="company.company_registry"/>
+			<br/>
+			<strong>Tel:</strong>
+                	<span t-field="company.phone"/>
+           	  </p>
+        </div>
+
+</div>
+
+<style>
+#foot{
+width: 960px;
+height: 150px;
+margin: -150px auto 0;
+}
+</style>
+<div class="foot">
+firma
+</div>
+
+<div class="footer">
+         <div class="col-xs-12">
+                <div style="border-bottom: 1px solid black;"></div>
+            </div>
+<div class="row text-center">
+<p>
+Teléfono:<span t-field="company.phone"/>|
+Email:<span t-field="company.email"/>|
+Website:<span t-field="company.website"/>|
+RTN:<span t-field="company.company_registry"/>
+</p>
+ <ul class="list-inline">
+                <li>Página:</li>
+                <li><span class="page"/></li>
+                <li>/</li>
+                <li><span class="topage"/></li>
+            </ul>
+</div>
+</div>
+
+
+
+
 					<div class="page">
+
+
+
+
    						<div class="row">
                 <div class="col-xs-5 col-xs-offset-7">
 		    <strong>Cliente:</strong>
@@ -22,20 +88,19 @@
                 </div>
             </div>
        		<h2>
-                <span t-if="o.type == 'out_invoice' and (o.state == 'open' or o.state == 'paid')">Invoice</span>
+                <span t-if="o.type == 'out_invoice' and (o.state == 'open' or o.state == 'paid')">Factura</span>
                 <span t-if="o.type == 'out_invoice' and o.state == 'proforma2'">PRO-FORMA</span>
-                <span t-if="o.type == 'out_invoice' and o.state == 'draft'">Draft Invoice</span>
-                <span t-if="o.type == 'out_invoice' and o.state == 'cancel'">Cancelled Invoice</span>
+                <span t-if="o.type == 'out_invoice' and o.state == 'draft'">Factura Borrador</span>
+                <span t-if="o.type == 'out_invoice' and o.state == 'cancel'">Cancelled Factura</span>
                 <span t-if="o.type == 'out_refund'">Refund</span>
                 <span t-if="o.type == 'in_refund'">Supplier Refund</span>
-                <span t-if="o.type == 'in_invoice'">Supplier Invoice</span>
+                <span t-if="o.type == 'in_invoice'">Supplier Factura</span>
                 <span t-field="o.number"/>
             </h2>
 
             <div class="row mt32 mb32">
-
                 <div class="col-xs-3" t-if="o.date_invoice">
-                    <strong>Invoice Date:</strong>
+                    <strong>Fecha de Factura:</strong>
                     <p t-field="o.date_invoice"/>
                 </div>
                 <div class="col-xs-3" t-if="o.nreference">
@@ -43,11 +108,11 @@
                     <p t-field="o.nreference"/>
                 </div>
                 <div class="col-xs-3" t-if="o.plaque">
-                    <strong>Plaque:</strong>
+                    <strong>Placa:</strong>
                     <p t-field="o.plaque"/>
                 </div>
                 <div class="col-xs-3" t-if="o.vehicle">
-                    <strong>Vehicle:</strong>
+                    <strong>Vehiculo:</strong>
                     <p t-field="o.vehicle"/>
                 </div>
             </div>
@@ -55,12 +120,12 @@
             <table class="table table-condensed">
                 <thead>
                     <tr>
-                        <th>Description</th>
-                        <th>Quantity</th>
-                        <th class="text-right">Unit Price</th>
-                        <th class="text-right" groups="sale.group_discount_per_so_line">Discount (%)</th>
-                        <th class="text-right">Taxes</th>
-                        <th class="text-right">Amount</th>
+                        <th>Descripción</th>
+                        <th>Cantidad</th>
+                        <th class="text-right">Precio Unitario</th>
+                        <th class="text-right" groups="sale.group_discount_per_so_line">Descuento (%)</th>
+                        <th class="text-right">Impuesto</th>
+                        <th class="text-right">Monto</th>
                     </tr>
                 </thead>
                 <tbody class="invoice_tbody">
@@ -89,13 +154,13 @@
                 <div class="col-xs-4 pull-right">
                     <table class="table table-condensed">
                         <tr class="border-black">
-                            <td><strong>Total Without Taxes</strong></td>
+                            <td><strong>Subtotal</strong></td>
                             <td class="text-right">
                                 <span t-field="o.amount_untaxed" t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/>
                             </td>
                         </tr>
                         <tr>
-                            <td>Taxes</td>
+                            <td>ISV</td>
                             <td class="text-right">
                                 <span t-field="o.amount_tax" t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/>
                             </td>
@@ -114,9 +179,9 @@
                     <table class="table table-condensed">
                         <thead>
                             <tr>
-                                <th>Tax</th>
+                                <th>Impuesto</th>
                                 <th class="text-right">Base</th>
-                                <th class="text-right">Amount</th>
+                                <th class="text-right">Monto</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -138,17 +203,29 @@
 
 
             <p t-if="o.comment">
-                <strong>Comment:</strong>
+                <strong>Comentario:</strong>
                 <span t-field="o.comment"/>
             </p>
             <p t-if="o.payment_term">
-                <strong>Payment Term:</strong>
+                <strong>Términos de Pago:</strong>
                 <span t-field="o.payment_term"/>
             </p>
             <p t-if="o.fiscal_position">
                 <strong>Fiscal Position:</strong>
                 <span t-field="o.fiscal_position"/>
             </p>
+
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<div class="row">
+<p>
+___________________<br/>
+<strong>Recibí Conforme</strong>
+</p>
+</div>
 
 					</div>
 				</t>

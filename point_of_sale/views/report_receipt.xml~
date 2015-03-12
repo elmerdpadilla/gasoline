@@ -21,12 +21,16 @@
         <div>
             <div class="col-xs-12">
                 <div style="border-bottom: 1px solid black;"></div>
+		<span t-field="company.name"/>
             </div>
+
         </div>
-        <div class="row">
+        <div class="row text-center">
                   <p>
-                	<strong>Dirección:</strong>
+                	
                 	<span t-field="company.street"/>
+<br/>f
+			<span t-field="company.street2"/>
 			<br/>
 			<strong>RTN :</strong>
                 	<span t-field="company.company_registry"/>
@@ -38,7 +42,7 @@
                 	<span t-field="company.phone"/>
            	  </p>
         </div>
-<div class="row">
+<div class="row text-center">
        <p>
                 	<strong>Factura N:</strong>
                 	<span t-field="o.name"/>

@@ -528,13 +528,21 @@ class product_template(osv.osv):
 
 class pos_order(osv.osv):
 	_inherit = 'pos.order'
+	def print_invoice(self, cr, uid, ids, context=None):
+		'''
+		This function prints the sales order and mark it as sent, so that we can see more easily the next step of the workflow
+		'''
+		assert len(ids) == 1, 'This option should only be used for a single id at a time'
+		for order in self.browse(cr,uid,ids,context=context):
+			if order.invoice_id:
+				return self.pool['report'].get_action(cr, uid, order.invoice_id.id, 'gasoline.report_invoice', context=context)
+		return self.pool['report'].get_action(cr, uid, ids, 'point_of_sale.report_receipt', context=context)
 	def onchange_vehicle_id(self, cr, uid, ids, vehicle_id,  context=None):
 		context = context or {}
 		result={}
 		values={}
 		values['odometer']=None
 		print vehicle_id
-		print "#"*50
 		if not vehicle_id:
 			return {'value':values}
 		obj_vehicle=self.pool.get('fleet.vehicle').browse(cr,uid,vehicle_id,context=context)
