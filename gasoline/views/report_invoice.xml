@@ -28,7 +28,9 @@
 			<strong><span t-field="company.name"/></strong>
                 	
 			<br/>
-                	<span t-field="company.street"/><span t-field="company.street2"/>
+                	<span t-field="company.street"/>
+			<br/>
+			<span t-field="company.street2"/>
 			<br/>
 			<strong>RTN :</strong>
                 	<span t-field="company.company_registry"/>

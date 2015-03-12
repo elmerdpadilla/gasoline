@@ -95,7 +95,7 @@ RTN:<span t-field="company.company_registry"/>
                 <span t-if="o.type == 'out_refund'">Refund</span>
                 <span t-if="o.type == 'in_refund'">Supplier Refund</span>
                 <span t-if="o.type == 'in_invoice'">Supplier Factura</span>
-                <span t-field="o.number"/>
+                <span t-field="o.origin"/>
             </h2>
 
             <div class="row mt32 mb32">
