@@ -574,7 +574,7 @@ msgstr "Nueva Lectura"
 #. module: gasoline
 #: field:pos.order,odometer:0
 msgid "Odometer"
-msgstr "cuentakilómetros"
+msgstr "Odómetro"
 
 #. module: gasoline
 #: view:website:gasoline.report_invoice
@@ -705,7 +705,7 @@ msgstr "Referencia"
 #. module: gasoline
 #: field:pos.order,nreference:0
 msgid "Reference Number"
-msgstr "Número de referencia"
+msgstr "Número de Orden"
 
 #. module: gasoline
 #: view:website:gasoline.report_closing
@@ -837,12 +837,12 @@ msgstr "¡No se puede eliminar!"
 #: view:pos.order:gasoline.view_pos_pos_form1
 #: field:pos.order,vehicle_id:0
 msgid "Vehicle"
-msgstr "vehículo"
+msgstr "Vehículo"
 
 #. module: gasoline
 #: view:website:gasoline.report_invoice
 msgid "Vehiculo:"
-msgstr "Vehiculo:"
+msgstr "Vehículo:"
 
 #. module: gasoline
 #: view:website:gasoline.report_closing
